@@ -79,20 +79,33 @@ The application will be available at `http://localhost:3000`
 
 Set the following secrets in your GitHub repository:
 
-- AZURE_WEBAPP_NAME
-- AZURE_WEBAPP_PUBLISH_PROFILE
-- CLIENT_ID
-- TENANT_ID
-- CLIENT_SECRET
-- REDIRECT_URI
-- SESSION_SECRET
+#### Application Secrets
+- CLIENT_ID (Microsoft Entra ID Application Client ID)
+- TENANT_ID (Microsoft Entra ID Tenant ID)
+- CLIENT_SECRET (Microsoft Entra ID Client Secret)
+- REDIRECT_URI (Authentication callback URL)
+- SESSION_SECRET (Session encryption key)
+
+#### Azure Deployment Secrets
+- AZURE_WEBAPP_NAME (Name of your Azure Web App)
+- AZURE_CLIENT_ID (Azure service principal client ID)
+- AZURE_TENANT_ID (Azure tenant ID)
+- AZURE_SUBSCRIPTION_ID (Azure subscription ID)
 
 ### Deployment Steps
 
-1. Create an Azure Web App
-2. Download the publish profile from Azure Web App
-3. Add the publish profile content to GitHub Secrets as AZURE_WEBAPP_PUBLISH_PROFILE
-4. Add other secrets as listed above
+1. Create an Azure Web App in the Azure Portal
+2. Create an Azure service principal for GitHub Actions:
+   ```bash
+   az ad sp create-for-rbac --name "myapp-deployer" --role contributor \
+                           --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group} \
+                           --sdk-auth
+   ```
+3. Add the service principal details to GitHub Secrets:
+   - AZURE_CLIENT_ID: service principal client ID
+   - AZURE_TENANT_ID: service principal tenant ID
+   - AZURE_SUBSCRIPTION_ID: Azure subscription ID
+4. Add the application secrets to GitHub Secrets
 5. Push to main branch to trigger deployment
 
 ## Project Structure
