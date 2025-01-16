@@ -86,34 +86,27 @@ Set the following secrets in your GitHub repository:
 - REDIRECT_URI (Authentication callback URL)
 - SESSION_SECRET (Session encryption key)
 
-#### Azure Deployment Secrets
-- AZURE_WEBAPP_NAME (Name of your Azure Web App)
-- AZURE_CLIENT_ID (Azure service principal client ID)
-- AZURE_TENANT_ID (Azure tenant ID)
-- AZURE_SUBSCRIPTION_ID (Azure subscription ID)
+#### Azure Deployment Secrets (Auto-configured)
+The following secrets are automatically configured when you connect your GitHub repository to Azure Web App:
+- AZUREAPPSERVICE_CLIENTID_{ID}
+- AZUREAPPSERVICE_TENANTID_{ID}
+- AZUREAPPSERVICE_SUBSCRIPTIONID_{ID}
 
 ### Deployment Steps
 
 1. Create an Azure Web App in the Azure Portal
-2. Create an Azure service principal for GitHub Actions:
-   ```bash
-   az ad sp create-for-rbac --name "myapp-deployer" --role contributor \
-                           --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group} \
-                           --sdk-auth
-   ```
-3. Add the service principal details to GitHub Secrets:
-   - AZURE_CLIENT_ID: service principal client ID
-   - AZURE_TENANT_ID: service principal tenant ID
-   - AZURE_SUBSCRIPTION_ID: Azure subscription ID
-4. Add the application secrets to GitHub Secrets
-5. Push to main branch to trigger deployment
+2. In the Azure Web App, go to Deployment Center
+3. Select GitHub as the source and connect your repository
+4. Azure will automatically configure the deployment workflow and required secrets
+5. Add the application secrets to GitHub Secrets
+6. Push to main branch to trigger deployment
 
 ## Project Structure
 
 ```
 ├── .github/
 │   └── workflows/
-│       └── azure-deploy.yml
+│       └── main_entraidlogin.yml
 ├── documents/
 │   ├── api.md
 │   ├── architecture.md
